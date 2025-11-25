@@ -1,0 +1,91 @@
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+const ProductList = () => {
+  const fatchProduct = async ({ queryKey }) => {
+    const response = await axios.get(`http://localhost:3000/${queryKey[0]}`);
+    return response.data;
+  };
+
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: fatchProduct,
+  });
+
+  if (isLoading) return <p className="text-3xl text-green-400">Loading...</p>;
+  if (error)
+    return (
+      <p className="text-3xl text-green-400">products data fetching error</p>
+    );
+
+  return (
+    <>
+      {products.length > 0 ? (
+        <ul className="grid grid-cols-3 gap-5">
+          {products.map((product) => (
+            <li
+              key={product.id}
+              className="max-w-sm bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full"
+            >
+              <div className="relative">
+                <img
+                  src={product.thumbnail}
+                  alt="iPhone X"
+                  className="w-full h-56 object-cover"
+                />
+
+                <span className="absolute bottom-3 right-3 bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-medium shadow">
+                  $899
+                </span>
+              </div>
+
+              <div className="p-5 flex flex-col grow">
+                <h2 className="text-lg font-semibold">{product.title}</h2>
+                <p className="text-gray-500 text-sm mt-1">
+                  {product.description.substring(0, 40)}...
+                </p>
+
+                <div className="flex items-center gap-1 mt-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 text-yellow-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 
+          1.371 1.24.588 1.81l-2.8 2.034a1 1 0 
+          00-.364 1.118l1.07 3.292c.3.921-.755 
+          1.688-1.54 1.118l-2.8-2.034a1 1 0 
+          00-1.175 0l-2.8 2.034c-.784.57-1.839-.197-1.54-1.118l1.07-3.292a1 1 0 
+          00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 
+          0 00.95-.69l1.07-3.292z"
+                    />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-700">
+                    {product.ratting}
+                  </span>
+                </div>
+
+                <button className="mt-auto w-full bg-blue-500 hover:bg-blue-700 text-white py-2 rounded-xl text-sm font-semibold transition-all duration-200 mb-5 ">
+                  Add to Cart
+                </button>
+                <button className="mt-auto w-full bg-red-500 hover:bg-red-700 text-white py-2 rounded-xl text-sm font-semibold transition-all duration-200">
+                  Delete to Cart
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>no data availeable</p>
+      )}
+    </>
+  );
+};
+
+export default ProductList;

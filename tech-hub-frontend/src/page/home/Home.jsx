@@ -1,10 +1,9 @@
+import ProductList from "./ProductList";
+
 const Home = () => {
   return (
     <div>
-      <h2>home</h2>
-      <h2>home</h2>
-      <h2>home</h2>
-      <h2>home</h2>
+      <ProductList />
     </div>
   );
 };
